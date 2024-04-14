@@ -72,23 +72,6 @@ public class GumballMachine implements IGumballMachine {
         }
         return new TransitionResult(succeeded, message, state, count);
     }
-    @Override
-    public TransitionResult dispense() {
-        boolean succeeded = false;
-        String message = "";
-        if (state.equalsIgnoreCase(HAS_QUARTER)) {
-            state = NO_QUARTER;
-            message = "Turning crank for a gumball";
-            succeeded = true;
-        } else if (state.equalsIgnoreCase(NO_QUARTER)) {
-            message = "Please insert a quarter";
-        } else if (state.equalsIgnoreCase(SOLD_OUT)) {
-            message = "You can't insert a quarter, the machine is sold out";
-        } else if (state.equalsIgnoreCase(SOLD)) {
-            message = "We've already given you a gumball";
-        }
-        return new TransitionResult(succeeded, message, state, count);
-    }
 
     @Override
     public void changeTheStateTo(GumballMachineState name) {
