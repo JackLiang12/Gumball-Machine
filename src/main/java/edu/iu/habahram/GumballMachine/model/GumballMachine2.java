@@ -60,6 +60,18 @@ public class GumballMachine2 implements IGumballMachine{
     }
 
     @Override
+    public TransitionResult refill(int count) {
+        this.setCount(this.getCount() + count);
+
+        if (this.state instanceof SoldOutState && this.count > 0) {
+            this.changeTheStateTo(GumballMachineState.NO_QUARTER);
+        }
+
+        String message = "Machine refilled with " + count + " gumballs. Current count: " + this.count;
+        boolean success = true;
+        return new TransitionResult(success, message, getTheStateName(), this.count);
+    }
+    @Override
     public void releaseBall() {
         count = count - 1;
     }

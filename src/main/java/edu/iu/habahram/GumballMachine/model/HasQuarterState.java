@@ -14,6 +14,12 @@ public class HasQuarterState implements IState{
         return new TransitionResult(succeeded, message, gumballMachine.getTheStateName(), count);
     }
     @Override
+    public TransitionResult refill(int count) {
+        gumballMachine.setCount(gumballMachine.getCount() + count);
+        String message = "Machine refilled with " + count + " gumballs";
+        return new TransitionResult(true, message, getTheName(), gumballMachine.getCount());
+    }
+    @Override
     public TransitionResult ejectQuarter() {
         String message = "Ejecting Quarter";
         boolean succeeded = true;

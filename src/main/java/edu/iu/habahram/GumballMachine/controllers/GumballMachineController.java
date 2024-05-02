@@ -3,62 +3,80 @@ package edu.iu.habahram.GumballMachine.controllers;
 import edu.iu.habahram.GumballMachine.model.GumballMachineRecord;
 import edu.iu.habahram.GumballMachine.model.TransitionRequest;
 import edu.iu.habahram.GumballMachine.model.TransitionResult;
-import edu.iu.habahram.GumballMachine.repository.IGumballRepository;
 import edu.iu.habahram.GumballMachine.service.IGumballService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/gumballs")
+@CrossOrigin
 public class GumballMachineController {
 
-    IGumballService gumballService;
+    private final IGumballService gumballService;
 
     public GumballMachineController(IGumballService gumballService) {
         this.gumballService = gumballService;
     }
 
     @GetMapping
-    public List<GumballMachineRecord> findAll() {
+    public ResponseEntity<List<GumballMachineRecord>> findAll() {
         try {
-            return gumballService.findAll();
+            List<GumballMachineRecord> records = gumballService.findAll();
+            return ResponseEntity.ok(records);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.internalServerError().build();
         }
     }
+
     @PostMapping
-    public String addOrUpdate(@RequestBody GumballMachineRecord record) {
+    public ResponseEntity<String> addOrUpdate(@RequestBody GumballMachineRecord record) {
         try {
-            return gumballService.save(record);
+            String response = gumballService.save(record);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @PutMapping("/insert-quarter")
-    public TransitionResult insertQuarter(@RequestBody TransitionRequest transitionRequest) {
+    public ResponseEntity<TransitionResult> insertQuarter(@RequestBody TransitionRequest transitionRequest) {
         try {
-            return gumballService.insertQuarter(transitionRequest.id());
+            TransitionResult result = gumballService.insertQuarter(transitionRequest.id());
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.internalServerError().build();
         }
     }
+
     @PutMapping("/eject-quarter")
-    public TransitionResult ejectQuarter(@RequestBody TransitionRequest transitionRequest) {
+    public ResponseEntity<TransitionResult> ejectQuarter(@RequestBody TransitionRequest transitionRequest) {
         try {
-            return gumballService.ejectQuarter(transitionRequest.id());
+            TransitionResult result = gumballService.ejectQuarter(transitionRequest.id());
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.internalServerError().build();
         }
     }
+
     @PutMapping("/turn-crank")
-    public TransitionResult turnCrank(@RequestBody TransitionRequest transitionRequest) {
+    public ResponseEntity<TransitionResult> turnCrank(@RequestBody TransitionRequest transitionRequest) {
         try {
-            return gumballService.turnCrank(transitionRequest.id());
+            TransitionResult result = gumballService.turnCrank(transitionRequest.id());
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/refill")
+    public ResponseEntity<TransitionResult> refill(@RequestBody TransitionRequest transitionRequest) {
+        try {
+            TransitionResult result = gumballService.refill(transitionRequest.id(), transitionRequest.count());
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

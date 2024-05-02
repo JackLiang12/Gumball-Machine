@@ -58,6 +58,27 @@ public class GumballService implements IGumballService{
         return transit(id, Transition.TURN_CRANK);
     }
 
+    @Override
+    public TransitionResult refill(String id, int count) throws IOException {
+        GumballMachineRecord record = gumballRepository.findById(id);
+        if (record == null) {
+            throw new IllegalArgumentException("No gumball machine found with ID: " + id);
+        }
+        IGumballMachine machine = new GumballMachine2(record.getId(), record.getState(), record.getCount());
+
+        if (record.getState().equals(GumballMachineState.OUT_OF_GUMBALLS.name())) {
+            machine.changeTheStateTo(GumballMachineState.NO_QUARTER);
+        }
+
+        machine.setCount(machine.getCount() + count);
+
+        record.setCount(machine.getCount());
+        record.setState(machine.getTheStateName());
+        save(record);
+
+        return new TransitionResult(true, "Refilled successfully", machine.getTheStateName(), machine.getCount());
+    }
+
 
 
     @Override

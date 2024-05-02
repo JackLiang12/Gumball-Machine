@@ -26,6 +26,12 @@ public class SoldState implements IState{
         return new TransitionResult(succeeded, message, gumballMachine.getTheStateName(), gumballMachine.getCount());
     }
     @Override
+    public TransitionResult refill(int count) {
+        gumballMachine.setCount(gumballMachine.getCount() + count);
+        String message = "Machine refilled with " + count + " gumballs";
+        return new TransitionResult(true, message, getTheName(), gumballMachine.getCount());
+    }
+    @Override
     public TransitionResult dispense() {
         String message = "Already Sold";
         boolean succeeded = false;
